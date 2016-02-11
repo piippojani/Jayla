@@ -1,0 +1,19 @@
+Hello, {firstname} {surname}. This is a test invoice for year {year}.
+
+Here's the invoice info:
+
+Acme
+123 Street
+12345 City
+
+
+
+{firstname} {surname}
+{Address}
+{zip} {city}
+{email}
+Member number: {membernumber}
+Member type: {membertype}
+
+Here are the payment options and info:
+{paymentoptions}
