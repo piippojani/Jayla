@@ -9,5 +9,5 @@ class TestCalculate_ref_nro(TestCase):
         test_ref_nos = csv.DictReader(open(test_ref_no_path, 'r'))
         i = 1
         for row in test_ref_nos:
-            self.assertEqual(row['Numbers'], calculate_ref_nro(2, 16, i))
+            self.assertEqual(row['Numbers'], calculate_ref_nro(14, 16, i))
             i += 1
