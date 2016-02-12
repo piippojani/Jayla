@@ -1,0 +1,18 @@
+Hello, {firstname} {surname}.\n
+This is a test invoice for year {year}.\n
+\n
+Here's the invoice info:\n
+<h4>Invoice Recipient Information\n
+Acme\n
+123 Street\n
+12345 City\n
+<h4>Payer Information\n
+{firstname} {surname}\n
+{address}\n
+{zip} {city}\n
+{recipientemail}\n
+Member number: {membernumber}\n
+Member type: {membertype}\n
+\n
+Here are the payment options and info:\n
+{paymentoptions}

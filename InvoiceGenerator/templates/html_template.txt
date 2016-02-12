@@ -1,0 +1,22 @@
+<html>
+<body>
+<h3>Hello, {firstname} {surname}.</h3>
+This is a test invoice for year {year}.<br>
+<br>
+Here's the invoice info:<br>
+<h4>Invoice Recipient Information</h4>
+Acme<br>
+123 Street<br>
+12345 City<br>
+<h4>Payer Information</h4>
+{firstname} {surname}<br>
+{address}<br>
+{zip} {city}<br>
+{recipientemail}<br>
+Member number: {membernumber}<br>
+Member type: {membertype}<br>
+<br>
+Here are the payment options and info:<br>
+{paymentoptions}
+</body>
+</html>
