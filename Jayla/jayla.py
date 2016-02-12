@@ -96,9 +96,9 @@ def create_payment_options_str(invoice_info, member_number, current_year, plain_
 
 def main():
     # Config
-    invoice_path = './invoice_types.csv'
-    member_path = './member_list.csv'
-    html_template_path = './templates/html_template.txt'
+    invoice_path = './default_settings/invoice_types.csv'
+    member_path = './default_settings/member_list.csv'
+    html_template_path = './default_settings/html_template.txt'
     # If the paths are provided on the command line, we use them
     if len(sys.argv) == 4:
         invoice_path = sys.argv[1]
@@ -165,7 +165,7 @@ def main():
                                                                                       current_year_short),
                                             year=current_year_long)
             # Save invoice to html file for archiving
-            with open("./emails/"+member_number+surname+first_name+current_year_long+".html", 'w') as html_file:
+            with open("./saved_emails/"+member_number+surname+first_name+current_year_long+".html", 'w') as html_file:
                 html_file.write(html_msg)
                 print("HTML file for {} {} saved...".format(first_name, surname))
             # Construct email message
