@@ -1,0 +1,3 @@
+Hello, Olavi Walther.\nThis is a test invoice for year 2016.\n\nHere's the invoice info:\n<h4>Invoice Recipient Information\nAcme\n123 Street\n12345 City\n<h4>Payer Information\nOlavi Walther\nT3\n23456 Hki\njv0pfin@gmail.com\nMember number: 3\nMember type: Full Member\n\nHere are the payment options and info:\nInvoice type: Full Member Yearly Fee, Total: 50,00, Reference Number: 1160 00033
+Invoice type: Range Fee, Total: 40,00, Reference Number: 2160 00030
+Invoice type: Combo, Total: 90,00, Reference Number: 3160 00037
