@@ -21,8 +21,6 @@ bb == current year
 ccccc == member number, padded with zeros if necessary
 d == control number
 """
-
-
 def calculate_ref_nro(invoice_type, year, member_number):
     # Make the number into a string, so we can index it and it's immutable
     # ref no is always 8+1 digits long
@@ -47,6 +45,11 @@ def calculate_ref_nro(invoice_type, year, member_number):
     return complete_str
 
 
+"""
+Creates a atring containing each payment option on its own line.
+The line consists of invoice type, invoice total for that type and the
+respective reference number created using calculate_ref_nro
+"""
 def create_payment_options_str(invoice_info, member_number, current_year, plain_text=False):
     payment_options_str = ""
     newline = "<br>"
@@ -65,101 +68,121 @@ def main():
     invoice_path = './invoice_types.csv'
     member_path = './member_list.csv'
     html_template_path = './templates/html_template.txt'
+    # If the paths are provided on the command line, we use them
+    if len(sys.argv) == 4:
+        invoice_path = sys.argv[1]
+        member_path = sys.argv[2]
+        html_template_path = sys.argv[3]
+    # Current year number for email and reference numbers.
     current_year_long = strftime('%Y', localtime())
     current_year_short = strftime('%y', localtime())
 
     # Ask the user for necessary information
-    print("Welcome to Jayla, a simple invoice emailing tool.")
-    print("Please, enter the following email service information.")
+    print("#################################################")
+    print("Welcome to JAYLA, a simple invoice emailing tool.")
+    print("#################################################")
+    print("\nPlease, enter the following email service information.")
     fromaddr = input("Enter the sender email: ")
     server_smtp = input("Enter SMTP server address: ")
     port_smtp = int(input("Enter SMTP port number: "))
     username = input("Enter the username to SMTP server: ")
     password = input("Enter the password to SMTP server: ")
+    tls = input("Use TLS instead of SSL? ('y' / Leave empty if you want to use SSL): ")
     msg_subject = input("Enter the email subject: ")
+
     print("\nStarting process...")
+
     # Import invoice HTML template
     with open(html_template_path, 'r') as template_file:
         html_template = template_file.read().replace('\n', '')
         print("Email template processed...")
+
     # Define invoices
     # Invoice_info has two fields per row: Invoice type, and invoice total
     with open(invoice_path, 'r') as inv_file:
         invoice_info = list(csv.DictReader(inv_file, delimiter=';'))
         print("Invoice information processed...")
+
         # Read recipient information from CSV file
-        with open(member_path, 'r') as mem_file:
-            members = list(csv.DictReader(mem_file, delimiter=';'))
-            print("Member list processed...")
-            # Go through each recipient, calculate reference number,
-            # create text for email and send it
-            email_total = len(members)
-            emails_sent = 0
-            for row in members:
-                member_number = row['member_number']
-                member_type = row['member_type']
-                first_name = row['first_name']
-                surname = row['surname']
-                address = row['address']
-                zip = row['zip']
-                city = row['city']
-                recipient_email = row['email']
-                html_msg = html_template.format(firstname=first_name,
-                                        surname=surname,
-                                        address=address,
-                                        zip=zip,
-                                        city=city,
-                                        recipientemail=recipient_email,
-                                        membernumber=member_number,
-                                        membertype=member_type,
-                                        paymentoptions=create_payment_options_str(invoice_info,
-                                                                                  member_number,
-                                                                                  current_year_short),
-                                        year=current_year_long)
+    with open(member_path, 'r') as mem_file:
+        members = list(csv.DictReader(mem_file, delimiter=';'))
+        print("Member list processed...\n")
 
-                with open("./emails/"+member_number+surname+first_name+current_year_long+".html", 'w') as html_file:
-                    html_file.write(html_msg)
-                    print("HTML file for {} {} saved...".format(first_name, surname))
+        # Go through each recipient, calculate reference number,
+        # create text for email and send it
+        email_total = len(members)
+        emails_sent = 0
+        for row in members:
+            member_number = row['member_number']
+            member_type = row['member_type']
+            first_name = row['first_name']
+            surname = row['surname']
+            address = row['address']
+            zip = row['zip']
+            city = row['city']
+            recipient_email = row['email']
+            html_msg = html_template.format(firstname=first_name,
+                                            surname=surname,
+                                            address=address,
+                                            zip=zip,
+                                            city=city,
+                                            recipientemail=recipient_email,
+                                            membernumber=member_number,
+                                            membertype=member_type,
+                                            paymentoptions=create_payment_options_str(invoice_info,
+                                                                                      member_number,
+                                                                                      current_year_short),
+                                            year=current_year_long)
+            # Save invoice to html file for archiving
+            with open("./emails/"+member_number+surname+first_name+current_year_long+".html", 'w') as html_file:
+                html_file.write(html_msg)
+                print("HTML file for {} {} saved...".format(first_name, surname))
+            # Construct email message
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = msg_subject
+            msg['From'] = fromaddr
+            msg['To'] = recipient_email
+            msg.attach(MIMEText(html_msg, 'html'))
 
-                msg = MIMEMultipart('alternative')
-                msg['Subject'] = msg_subject
-                msg['From'] = fromaddr
-                msg['To'] = recipient_email
-                msg.attach(MIMEText(html_msg, 'html'))
-
-                try:
-
-                    server = smtplib.SMTP(host=server_smtp, port=port_smtp)
+            try:
+                # Connect to SMTP server, open TLS instead of SSL if necessary
+                server = smtplib.SMTP(host=server_smtp, port=port_smtp)
+                if len(tls) != 0:
                     server.starttls()
-                    server.set_debuglevel(False)
-                    server.esmtp_features['auth'] = 'LOGIN PLAIN'
-                    server.login(username, password)
-                    server.sendmail(fromaddr, recipient_email, str(msg))
-                    server.quit()
-                    emails_sent += 1
-                    print("Sent email to {}... [{} / {} done]".format(recipient_email, emails_sent, email_total))
-                except smtplib.SMTPServerDisconnected:
-                    print("smtplib.SMTPServerDisconnected")
-                except smtplib.SMTPResponseException as e:
-                    print ("smtplib.SMTPResponseException: {} {}".format(str(e.smtp_code), str(e.smtp_error)))
-                except smtplib.SMTPSenderRefused:
-                    print("smtplib.SMTPSenderRefused")
-                except smtplib.SMTPRecipientsRefused:
-                    print("smtplib.SMTPRecipientsRefused")
-                except smtplib.SMTPDataError:
-                    print("smtplib.SMTPDataError")
-                except smtplib.SMTPConnectError:
-                    print("smtplib.SMTPConnectError")
-                except smtplib.SMTPHeloError:
-                    print("smtplib.SMTPHeloError")
-                except smtplib.SMTPAuthenticationError:
-                    print("smtplib.SMTPAuthenticationError")
-                except Exception as e:
-                    print("Exception", e)
-                    print(traceback.format_exc())
-                    print(sys.exc_info()[0])
+                # Flag for debug mode
+                server.set_debuglevel(False)
+                # Login to server
+                server.esmtp_features['auth'] = 'LOGIN PLAIN'
+                server.login(username, password)
+                # Send the email
+                server.sendmail(fromaddr, recipient_email, str(msg))
+                # Disconnect
+                server.quit()
+                emails_sent += 1
+                print("Sent email to {}... [{} / {} done]\n".format(recipient_email, emails_sent, email_total))
 
-    print("Success! All emails sent!")
+            except smtplib.SMTPServerDisconnected:
+                print("smtplib.SMTPServerDisconnected")
+            except smtplib.SMTPResponseException as e:
+                print ("smtplib.SMTPResponseException: {} {}".format(str(e.smtp_code), str(e.smtp_error)))
+            except smtplib.SMTPSenderRefused:
+                print("smtplib.SMTPSenderRefused")
+            except smtplib.SMTPRecipientsRefused:
+                print("smtplib.SMTPRecipientsRefused")
+            except smtplib.SMTPDataError:
+                print("smtplib.SMTPDataError")
+            except smtplib.SMTPConnectError:
+                print("smtplib.SMTPConnectError")
+            except smtplib.SMTPHeloError:
+                print("smtplib.SMTPHeloError")
+            except smtplib.SMTPAuthenticationError:
+                print("smtplib.SMTPAuthenticationError")
+            except Exception as e:
+                print("Exception", e)
+                print(traceback.format_exc())
+                print(sys.exc_info()[0])
+
+    print("Success! All {} emails were sent!".format(emails_sent))
 
 
 main()
