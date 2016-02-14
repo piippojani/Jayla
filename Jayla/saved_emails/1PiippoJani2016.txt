@@ -1,3 +1,0 @@
-Hello, Jani Piippo.\nThis is a test invoice for year 2016.\n\nHere's the invoice info:\n<h4>Invoice Recipient Information\nAcme\n123 Street\n12345 City\n<h4>Payer Information\nJani Piippo\nT1\n12345 Tre\njani.vo.piippo@gmail.com\nMember number: 1\nMember type: Full Member\n\nHere are the payment options and info:\nInvoice type: Full Member Yearly Fee, Total: 50,00, Reference Number: 1160 00017
-Invoice type: Range Fee, Total: 40,00, Reference Number: 2160 00014
-Invoice type: Combo, Total: 90,00, Reference Number: 3160 00011

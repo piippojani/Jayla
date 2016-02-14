@@ -7,7 +7,8 @@ The tool sends a simple html email containing invoice information to
 every recipient in a CSV file (up to 99999 recipients).
 
 User instructions:
-1. python jayla.py OR python jayla.py <path_to_invoice_information> <path_to_member_list> <path_to_html_template>
+0. Make sure you have Python3.3 installed
+1. python3.3 jayla.py OR python jayla.py <path_to_invoice_information> <path_to_member_list> <path_to_html_template>
 2. Enter the information the application asks
 3. Enjoy
 

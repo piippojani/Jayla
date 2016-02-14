@@ -1,3 +1,0 @@
-Hello, Valtteri Olof.\nThis is a test invoice for year 2016.\n\nHere's the invoice info:\n<h4>Invoice Recipient Information\nAcme\n123 Street\n12345 City\n<h4>Payer Information\nValtteri Olof\nT2\n34567 Jkl\njani.piippo@student.tut.fi\nMember number: 2\nMember type: Cheerleader\n\nHere are the payment options and info:\nInvoice type: Full Member Yearly Fee, Total: 50,00, Reference Number: 1160 00020
-Invoice type: Range Fee, Total: 40,00, Reference Number: 2160 00027
-Invoice type: Combo, Total: 90,00, Reference Number: 3160 00024

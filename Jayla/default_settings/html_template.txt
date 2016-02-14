@@ -1,6 +1,6 @@
 <html>
 <body>
-<h3>Hello, {firstname} {surname}.</h3>
+<h3>Morjesta pöytään, {firstname} {surname}.</h3>
 This is a test invoice for year {year}.<br>
 <br>
 Here's the invoice info:<br>

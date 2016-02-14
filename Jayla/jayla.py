@@ -45,6 +45,13 @@ import sys
 
 
 """
+TODO: Reference number listing: name, and all possible reference number types
+TODO: Inspection for different member types and printing the payment options
+      accordingly (youth, cheerleaders.
+"""
+
+
+"""
 Calculates the Finnish type reference number
 The reference number can be practically anything, but
 this system creates a form of abbcccccd, in which
